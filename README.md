@@ -5,7 +5,9 @@
 
 OpenStreetMap Sample Application.
 
-## References
+## Sample
+
+https://dotnsf.github.io/osm_sample/
 
 
 ## Licensing
