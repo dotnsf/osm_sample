@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3c.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+<meta charset="utf8"/>
+<meta http-equiv="pragma" content="no-cache"/>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js"></script>
+
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<meta name="apple-mobile-web-app-title" content="OSM Sample"/>
+
+<title>OSM Sample</title>
+<script>
+</script>
+<script>
+//. 初期中心位置
+var lat = 38.419525;
+var lng = 140.09628;
+
+//. 初期ズームレベル
+var zoomlevel = 9;
+
+var map = null;
+
+$(function(){
+  //. 初期位置を中心とした地図を OpenStreetMap データで表示
+  map = L.map('demoMap', { dragging: true, zoomControl: false }).setView( [ lat, lng ], zoomlevel );
+  L.control.zoom( { position: 'bottomright' } ).addTo( map );
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; <a href="//openstreetmap.org/">OpenStreetMap</a>',
+    }
+  ).addTo( map );
+
+  map.on( 'moveend', function( e ){
+    var mapCenter = map.getCenter();
+    console.log( mapCenter );
+  });
+
+  var users = [
+    { name: 'User #0', lat: 38.133, lng: 140.267 },
+    { name: 'User #1', lat: 38.750, lng: 140.300 },
+    { name: 'User #2', lat: 38.700, lng: 140.217 },
+    { name: 'User #3', lat: 37.917, lng: 140.117 },
+    { name: 'User #4', lat: 38.717, lng: 139.817 },
+    { name: 'User #5', lat: 38.050, lng: 140.133 },
+    { name: 'User #6', lat: 38.000, lng: 140.183 },
+    { name: 'User #7', lat: 38.033, lng: 139.983 },
+    { name: 'User #8', lat: 38.900, lng: 139.833 },
+    { name: 'User #9', lat: 38.317, lng: 140.267 },
+    { name: 'User #10', lat: 38.250, lng: 140.333 }
+  ];
+
+  showData( users, 0 );
+});
+
+function showData( users, index ){
+  if( users.length <= index ){
+    return;
+  }else{
+    var user = users[index];
+    user.gendar = ( index % 2 == 0 ? 'F' : 'M' );
+    mapUser( user );
+    setTimeout( function(){
+      showData( users, index + 1 );
+    }, 2000 );
+  }
+}
+
+function mapUser( user ){
+  if( user ){
+    var lat = user.lat;
+    var lng = user.lng;
+    var name = user.name;
+
+    var myIcon = L.divIcon( { className: 'mymarker mymarker-' + user.gendar } );
+    L.marker( [ lat, lng ], { icon: myIcon } ).addTo( map ).bindPopup( name );
+  }
+}
+</script>
+<style>
+html, body {
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+}
+#demoMap{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+.mymarker{
+  width: 20px !important;
+  height: 20px !important;
+  margin: -10px !important;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba( 0, 0, 0, 0.8 );
+  z-index: 20 !important;
+}
+.mymarker-F{
+  border: 3px solid #f00;
+  background-color: #fcc;
+}
+.mymarker-M{
+  border: 3px solid #00f;
+  background-color: #ccf;
+}
+</style>
+</head>
+<body>
+  <div>
+    <div id="demoMap"></div>
+  </div>
+</body>
+</html>
